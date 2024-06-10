@@ -10,10 +10,10 @@ Single Image Haze Removal Using Dark Channel Prior，使用暗通道先验的单
 
 
 ### 处理前图像
-![处理前图像](image.jpg)
+![处理前图像](images/image.jpg)
 <br>
 
 ### 处理后图像
-![处理前图像](processed_image.jpg)
+![处理前图像](images/processed_image.jpg)
 
 
