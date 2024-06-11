@@ -37,22 +37,23 @@ for i in range(3):  # 将原始图像每一个通道分别归一化
 te = 1 - 0.95 * dark_channal(nor)  # 根据公式计算出传输率估值te，参数设置为0.95
 
 # 使用引导滤波器对传输率t进行细化
+ks=50
 gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # 将原始图片转换为灰度图
 gray_image = np.float64(gray_image) / 255  # 进行归一化
 
-mean_I = cv2.boxFilter(gray_image, cv2.CV_64F, (60, 60))  # 引导图像均值滤波
-mean_p = cv2.boxFilter(te, cv2.CV_64F, (60, 60))  # 待处理图像均值滤波
+mean_I = cv2.boxFilter(gray_image, cv2.CV_64F, (ks, ks))  # 引导图像均值滤波
+mean_p = cv2.boxFilter(te, cv2.CV_64F, (ks, ks))  # 待处理图像均值滤波
 
-mean_Ip = cv2.boxFilter(gray_image * te, cv2.CV_64F, (60, 60))  # 计算协方差
+mean_Ip = cv2.boxFilter(gray_image * te, cv2.CV_64F, (ks, ks))  # 计算协方差
 cov_Ip = mean_Ip - mean_I * mean_p
 
-var_I = cv2.boxFilter(gray_image * gray_image, cv2.CV_64F, (60, 60)) - mean_I * mean_I  # 计算引导图像的方差
+var_I = cv2.boxFilter(gray_image * gray_image, cv2.CV_64F, (ks, ks)) - mean_I * mean_I  # 计算引导图像的方差
 
 a = cov_Ip / (var_I + 0.0001)  # 线性系数 a 和 b
 b = mean_p - a * mean_I
 
-mean_a = cv2.boxFilter(a, cv2.CV_64F, (60, 60))  # 对系数 a 和 b 进行均值滤波
-mean_b = cv2.boxFilter(b, cv2.CV_64F, (60, 60))
+mean_a = cv2.boxFilter(a, cv2.CV_64F, (ks, ks))  # 对系数 a 和 b 进行均值滤波
+mean_b = cv2.boxFilter(b, cv2.CV_64F, (ks, ks))
 
 t = mean_a * gray_image + mean_b  # 输出细化后的传输率 t
 
